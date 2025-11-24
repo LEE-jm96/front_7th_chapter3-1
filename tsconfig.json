@@ -1,7 +1,4 @@
 {
   "files": [],
-  "references": [
-    { "path": "./packages/before" },
-    { "path": "./packages/after" }
-  ]
+  "references": [{ "path": "./packages/before" }, { "path": "./packages/after" }]
 }

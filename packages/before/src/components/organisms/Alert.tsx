@@ -18,11 +18,16 @@ export const Alert: React.FC<AlertProps> = ({
 }) => {
   const getIcon = () => {
     switch (variant) {
-      case 'info': return 'ℹ️';
-      case 'success': return '✓';
-      case 'warning': return '⚠️';
-      case 'error': return '✕';
-      default: return '•';
+      case 'info':
+        return 'ℹ️';
+      case 'success':
+        return '✓';
+      case 'warning':
+        return '⚠️';
+      case 'error':
+        return '✕';
+      default:
+        return '•';
     }
   };
 

@@ -80,18 +80,16 @@ export const Table: React.FC<TableProps> = ({
     setTableData(sorted);
   };
 
-  const filteredData = searchable && searchTerm
-    ? tableData.filter(row =>
-        Object.values(row).some(val =>
-          String(val).toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredData =
+    searchable && searchTerm
+      ? tableData.filter((row) =>
+          Object.values(row).some((val) =>
+            String(val).toLowerCase().includes(searchTerm.toLowerCase()),
+          ),
         )
-      )
-    : tableData;
+      : tableData;
 
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
+  const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const totalPages = Math.ceil(filteredData.length / pageSize);
 
@@ -100,9 +98,15 @@ export const Table: React.FC<TableProps> = ({
     striped && 'table-striped',
     bordered && 'table-bordered',
     hover && 'table-hover',
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
-  const actualColumns = columns || (tableData[0] ? Object.keys(tableData[0]).map(key => ({ key, header: key, width: undefined })) : []);
+  const actualColumns =
+    columns ||
+    (tableData[0]
+      ? Object.keys(tableData[0]).map((key) => ({ key, header: key, width: undefined }))
+      : []);
 
   // 🚨 Bad Practice: Table 컴포넌트가 도메인별 렌더링 로직을 알고 있음
   const renderCell = (row: any, columnKey: string) => {
@@ -116,8 +120,7 @@ export const Table: React.FC<TableProps> = ({
       if (columnKey === 'status') {
         // User status를 Badge status로 변환
         const badgeStatus =
-          value === 'active' ? 'published' :
-          value === 'inactive' ? 'draft' : 'rejected';
+          value === 'active' ? 'published' : value === 'inactive' ? 'draft' : 'rejected';
         return <Badge status={badgeStatus} showIcon />;
       }
       if (columnKey === 'lastLogin') {
@@ -140,11 +143,18 @@ export const Table: React.FC<TableProps> = ({
     if (entityType === 'post') {
       if (columnKey === 'category') {
         const type =
-          value === 'development' ? 'primary' :
-          value === 'design' ? 'info' :
-          value === 'accessibility' ? 'danger' :
-          'secondary';
-        return <Badge type={type} pill>{value}</Badge>;
+          value === 'development'
+            ? 'primary'
+            : value === 'design'
+              ? 'info'
+              : value === 'accessibility'
+                ? 'danger'
+                : 'secondary';
+        return (
+          <Badge type={type} pill>
+            {value}
+          </Badge>
+        );
       }
       if (columnKey === 'status') {
         return <Badge status={value} showIcon />;
@@ -159,29 +169,17 @@ export const Table: React.FC<TableProps> = ({
               수정
             </Button>
             {row.status === 'draft' && (
-              <Button
-                size="sm"
-                variant="success"
-                onClick={() => onPublish?.(row.id)}
-              >
+              <Button size="sm" variant="success" onClick={() => onPublish?.(row.id)}>
                 게시
               </Button>
             )}
             {row.status === 'published' && (
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={() => onArchive?.(row.id)}
-              >
+              <Button size="sm" variant="secondary" onClick={() => onArchive?.(row.id)}>
                 보관
               </Button>
             )}
             {row.status === 'archived' && (
-              <Button
-                size="sm"
-                variant="primary"
-                onClick={() => onRestore?.(row.id)}
-              >
+              <Button size="sm" variant="primary" onClick={() => onRestore?.(row.id)}>
                 복원
               </Button>
             )}
@@ -229,7 +227,14 @@ export const Table: React.FC<TableProps> = ({
                 style={column.width ? { width: column.width } : undefined}
                 onClick={() => sortable && handleSort(column.key)}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: sortable ? 'pointer' : 'default' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    cursor: sortable ? 'pointer' : 'default',
+                  }}
+                >
                   {column.header}
                   {sortable && sortColumn === column.key && (
                     <span>{sortDirection === 'asc' ? '↑' : '↓'}</span>
@@ -257,14 +262,16 @@ export const Table: React.FC<TableProps> = ({
       </table>
 
       {totalPages > 1 && (
-        <div style={{
-          marginTop: '16px',
-          display: 'flex',
-          gap: '8px',
-          justifyContent: 'center',
-        }}>
+        <div
+          style={{
+            marginTop: '16px',
+            display: 'flex',
+            gap: '8px',
+            justifyContent: 'center',
+          }}
+        >
           <button
-            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             style={{
               padding: '6px 12px',
@@ -280,7 +287,7 @@ export const Table: React.FC<TableProps> = ({
             {currentPage} / {totalPages}
           </span>
           <button
-            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
             style={{
               padding: '6px 12px',

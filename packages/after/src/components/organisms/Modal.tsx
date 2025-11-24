@@ -45,14 +45,8 @@ export const Modal: React.FC<ModalProps> = ({
             </button>
           </div>
         )}
-        <div className="modal-body">
-          {children}
-        </div>
-        {showFooter && footerContent && (
-          <div className="modal-footer">
-            {footerContent}
-          </div>
-        )}
+        <div className="modal-body">{children}</div>
+        {showFooter && footerContent && <div className="modal-footer">{footerContent}</div>}
       </div>
     </div>
   );

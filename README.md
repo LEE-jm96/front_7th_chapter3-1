@@ -54,6 +54,7 @@ packages/
 ### 주요 문제점
 
 #### (1) 일관성 없는 컴포넌트 API
+
 ```typescript
 // 각 컴포넌트마다 다른 props 이름과 패턴
 <FormInput width="full" helpText="도움말" />
@@ -62,16 +63,19 @@ packages/
 ```
 
 #### (2) 혼재된 스타일링 방식
+
 - 인라인 스타일: `style={{ padding: '10px', border: '1px solid #ccc' }}`
 - CSS Modules: `className={styles.card}`
 - 하드코딩된 색상 값: `#007bff`, `#d32f2f`
 
 #### (3) 타입 안전성 부족
+
 - 느슨한 타입 정의
 - 수동 validation
 - 에러 처리 불일치
 
 #### (4) 접근성 이슈
+
 - 불완전한 ARIA 라벨
 - 키보드 네비게이션 미비
 - 스크린 리더 지원 부족
@@ -81,6 +85,7 @@ packages/
 ### (1) Atomic Design Pattern - 이론과 현실의 괴리
 
 **현재 구조 (before):**
+
 ```
 components/
 ├── atoms/      # Button, Badge
@@ -89,6 +94,7 @@ components/
 ```
 
 **⚠️ 실무에서의 문제점:**
+
 1. **분류 기준이 모호함**
    - Card는 atom인가 molecule인가? 내용에 따라 달라짐
    - FormInput은 molecule이지만, 단독으로도 충분히 사용 가능
@@ -103,6 +109,7 @@ components/
    - 팀원마다 분류 기준이 다를 수 있음
 
 **🎯 이번 과제의 목표:**
+
 - Atomic Design의 **개념 자체**를 이해하기 (컴포넌트 조합과 재사용성)
 - 하지만 **폴더 구조는 디자인 시스템과 개발구조가 다르다는 점** 이해하기
   - shadcn/ui도 `components/ui/` 단순 구조를 사용함을 주목
@@ -110,12 +117,14 @@ components/
 ### (2) shadcn/ui 사용해보기
 
 **학습 내용:**
+
 - shadcn/ui의 설계 철학 이해
 - CLI를 통한 컴포넌트 추가
 - Radix UI 기반의 접근성 구현
 - 컴포넌트 커스터마이징 방법
 
 **구현할 컴포넌트:**
+
 ```bash
 npx shadcn-ui@latest add button
 npx shadcn-ui@latest add input
@@ -128,6 +137,7 @@ npx shadcn-ui@latest add table
 ### (3) TailwindCSS + CVA로 Variants 만들기
 
 **Before (문제):**
+
 ```typescript
 // 하드코딩된 스타일
 const getButtonStyle = (variant: string) => {
@@ -138,35 +148,37 @@ const getButtonStyle = (variant: string) => {
 ```
 
 **After (목표):**
+
 ```typescript
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva, type VariantProps } from 'class-variance-authority';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors",
+  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors',
   {
     variants: {
       variant: {
-        primary: "bg-primary text-primary-foreground hover:bg-primary/90",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
       },
       size: {
-        sm: "h-9 px-3",
-        md: "h-10 px-4 py-2",
-        lg: "h-11 px-8",
+        sm: 'h-9 px-3',
+        md: 'h-10 px-4 py-2',
+        lg: 'h-11 px-8',
       },
     },
     defaultVariants: {
-      variant: "primary",
-      size: "md",
+      variant: 'primary',
+      size: 'md',
     },
-  }
+  },
 );
 ```
 
 ### (4) Storybook 사용해보기
 
 **Storybook 설정:**
+
 ```typescript
 // Button.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
@@ -193,6 +205,7 @@ export const Primary: Story = {
 ```
 
 **학습 내용:**
+
 - Storybook 설정 및 실행
 - Stories 작성 방법
 - Args와 Controls 활용
@@ -202,17 +215,21 @@ export const Primary: Story = {
 ## 5. 과제 제출
 
 ### 필수 구현 사항
+
 - [ ] after 패키지에 디자인 시스템 구현 완료
 - [ ] PostManagement 페이지 마이그레이션 완료
 - [ ] Storybook에 주요 컴포넌트 stories 작성
 - [ ] README에 before/after 비교 및 개선사항 문서화
 
 ### 심화 구현 사항
+
 - [ ] Dark mode 지원
 - [ ] Dark mode toggle 버튼
 
 ## 6. 그밖에 해보면 좋을 것들
+
 > 분량상 이번 과제에는 포함하지 않았지만, 실무에서 자주 쓰이는 패턴들입니다. 시간 여유가 된다면 도전해보세요!
+
 - [ ] figma 디자인 토큰 추출 후 적용
 - [ ] figma Design to Code 플러그인 혹은 MCP 사용해보기
 - [ ] figma Icon to SVG + deploy to CDN 시스템 구축 해보기
@@ -229,27 +246,33 @@ export const Primary: Story = {
 ## 참고 자료
 
 ### TailwindCSS
+
 - [TailwindCSS 공식 문서](https://tailwindcss.com/docs)
 - [TailwindCSS v4.0 새로운 기능](https://tailwindcss.com/blog/tailwindcss-v4-alpha)
 
 ### CVA (Class Variance Authority)
+
 - [CVA 공식 문서](https://cva.style/docs)
 - [CVA 예제 모음](https://cva.style/docs/examples)
 
 ### shadcn/ui
+
 - [shadcn/ui 공식 문서](https://ui.shadcn.com/)
 - [shadcn/ui Components](https://ui.shadcn.com/docs/components)
 
 ### Storybook
+
 - [Storybook 공식 문서](https://storybook.js.org/docs/react/get-started/introduction)
 - [Storybook Args와 Controls](https://storybook.js.org/docs/react/writing-stories/args)
 - [Accessibility addon](https://storybook.js.org/addons/@storybook/addon-a11y)
 
 ### React Hook Form + Zod
+
 - [React Hook Form](https://react-hook-form.com/)
 - [Zod Validation](https://zod.dev/)
 - [React Hook Form + Zod 통합](https://github.com/react-hook-form/resolvers#zod)
 
 ### Atomic Design
+
 - [Atomic Design Methodology](https://atomicdesign.bradfrost.com/)
 - [Atomic Design과 React](https://fe-developers.kakaoent.com/2022/220505-how-page-part-use-atomic-design-system/)

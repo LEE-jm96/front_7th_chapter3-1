@@ -74,20 +74,12 @@ export const Button: React.FC<ButtonProps> = ({
     }
   }
 
-  const classes = [
-    'btn',
-    `btn-${actualVariant}`,
-    `btn-${size}`,
-    fullWidth && 'btn-fullwidth',
-  ].filter(Boolean).join(' ');
+  const classes = ['btn', `btn-${actualVariant}`, `btn-${size}`, fullWidth && 'btn-fullwidth']
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <button
-      type={type}
-      onClick={onClick}
-      disabled={actualDisabled}
-      className={classes}
-    >
+    <button type={type} onClick={onClick} disabled={actualDisabled} className={classes}>
       {actualChildren}
     </button>
   );

@@ -82,7 +82,7 @@ export const FormInput: React.FC<FormInputProps> = ({
       // 🚨 비즈니스 규칙: 금칙어 체크
       if (checkBusinessRules && entityType === 'post') {
         const bannedWords = ['광고', '스팸', '홍보'];
-        const hasBannedWord = bannedWords.some(word => val.includes(word));
+        const hasBannedWord = bannedWords.some((word) => val.includes(word));
         if (hasBannedWord) {
           setInternalError('제목에 금지된 단어가 포함되어 있습니다');
         }
@@ -97,7 +97,9 @@ export const FormInput: React.FC<FormInputProps> = ({
   };
 
   const displayError = error || internalError;
-  const inputClasses = ['form-input', displayError && 'error', `input-width-${width}`].filter(Boolean).join(' ');
+  const inputClasses = ['form-input', displayError && 'error', `input-width-${width}`]
+    .filter(Boolean)
+    .join(' ');
   const helperClasses = ['form-helper-text', displayError && 'error'].filter(Boolean).join(' ');
 
   return (

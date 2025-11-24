@@ -21,9 +21,13 @@ export const FormCheckbox: React.FC<FormCheckboxProps> = ({
   hint,
 }) => {
   const wrapperClasses = ['checkbox-wrapper', disabled && 'disabled'].filter(Boolean).join(' ');
-  const customClasses = ['checkbox-custom', checked && 'checked', disabled && 'disabled'].filter(Boolean).join(' ');
+  const customClasses = ['checkbox-custom', checked && 'checked', disabled && 'disabled']
+    .filter(Boolean)
+    .join(' ');
   const checkmarkClasses = ['checkbox-checkmark', checked && 'visible'].filter(Boolean).join(' ');
-  const labelClasses = ['checkbox-label', error && 'error', disabled && 'disabled'].filter(Boolean).join(' ');
+  const labelClasses = ['checkbox-label', error && 'error', disabled && 'disabled']
+    .filter(Boolean)
+    .join(' ');
 
   const handleClick = () => {
     if (!disabled) {
