@@ -52,11 +52,8 @@ export interface FormTextareaProps {
 // FormCheckbox 타입
 export interface FormCheckboxProps {
   name: string;
-  checked: boolean;
-  onChange: (checked: boolean) => void;
   label: string;
   disabled?: boolean;
-  error?: string;
   hint?: string;
 }
 

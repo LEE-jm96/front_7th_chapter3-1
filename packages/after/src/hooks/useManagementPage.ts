@@ -162,7 +162,7 @@ export const useManagementPage = (): UseManagementPageResult => {
           content: post.content,
           author: post.author,
           category: post.category,
-        });
+        } as PostFormData);
       }
 
       setIsEditModalOpen(true);
@@ -184,7 +184,7 @@ export const useManagementPage = (): UseManagementPageResult => {
         await userService.update(selectedItem.id, userData);
       } else {
         const postData = formData as PostFormData;
-        await postService.update(selectedItem.id, postData);
+        await postService.update(selectedItem.id, postData as Parameters<typeof postService.update>[1]);
       }
 
       await loadData();
