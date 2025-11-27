@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { useState } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
 
 import { FormCheckbox } from '@/components/ui/forms/form-checkbox';
 import { FormInput } from '@/components/ui/forms/form-input';
@@ -14,16 +14,9 @@ const meta = {
     layout: 'padded',
   },
   argTypes: {
-    fieldType: {
-      control: 'select',
-      options: ['normal', 'username', 'email', 'postTitle'],
-    },
     width: {
       control: 'inline-radio',
       options: ['small', 'medium', 'large', 'full'],
-    },
-    checkBusinessRules: {
-      control: 'boolean',
     },
     label: { control: 'text' },
     placeholder: { control: 'text' },
@@ -38,58 +31,49 @@ export const Playground: Story = {
   args: {
     name: 'username',
     label: '사용자명',
-    value: '',
-    onChange: () => undefined,
     width: 'medium',
     placeholder: '예: hanghae_user',
-    fieldType: 'username',
-    checkBusinessRules: true,
     helpText: '3~20자의 영문/숫자/언더스코어',
   },
   render: (args) => {
-    const [inputValue, setInputValue] = useState(args.value ?? '');
-    const [selectValue, setSelectValue] = useState('draft');
-    const [textareaValue, setTextareaValue] = useState('스토리북 샘플 컨텐츠입니다.');
-    const [checkboxChecked, setCheckboxChecked] = useState(true);
+    const formMethods = useForm({
+      defaultValues: {
+        username: '',
+        status: 'draft',
+        description: '스토리북 샘플 컨텐츠입니다.',
+        tos: true,
+      },
+    });
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 420 }}>
-        <FormInput
-          {...args}
-          value={inputValue}
-          onChange={(val) => setInputValue(val)}
-        />
+      <FormProvider {...formMethods}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 420 }}>
+          <FormInput {...args} />
 
-        <FormSelect
-          name="status"
-          label="게시 상태"
-          value={selectValue}
-          onChange={setSelectValue}
-          options={[
-            { value: 'draft', label: '임시 저장' },
-            { value: 'published', label: '게시됨' },
-            { value: 'archived', label: '보관됨' },
-          ]}
-          helpText="상태에 따라 Table 컴포넌트의 Badge 도 변경됩니다."
-        />
+          <FormSelect
+            name="status"
+            label="게시 상태"
+            options={[
+              { value: 'draft', label: '임시 저장' },
+              { value: 'published', label: '게시됨' },
+              { value: 'archived', label: '보관됨' },
+            ]}
+            helpText="상태에 따라 Table 컴포넌트의 Badge 도 변경됩니다."
+          />
 
-        <FormTextarea
-          name="description"
-          label="설명"
-          value={textareaValue}
-          onChange={setTextareaValue}
-          helpText="textarea 역시 동일한 에러/헬프 텍스트 스타일을 공유합니다."
-        />
+          <FormTextarea
+            name="description"
+            label="설명"
+            helpText="textarea 역시 동일한 에러/헬프 텍스트 스타일을 공유합니다."
+          />
 
-        <FormCheckbox
-          name="tos"
-          label="팀 규칙을 모두 이해했습니다."
-          checked={checkboxChecked}
-          onChange={setCheckboxChecked}
-          hint="체크를 해제하면 에러 스타일을 확인할 수 있습니다."
-          error={!checkboxChecked ? '필수 동의 항목입니다.' : undefined}
-        />
-      </div>
+          <FormCheckbox
+            name="tos"
+            label="팀 규칙을 모두 이해했습니다."
+            hint="체크를 해제하면 에러 스타일을 확인할 수 있습니다."
+          />
+        </div>
+      </FormProvider>
     );
   },
   parameters: {
