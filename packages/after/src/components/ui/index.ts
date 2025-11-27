@@ -16,6 +16,5 @@ export * from './feedback/badge';
 export * from './feedback/dialog';
 
 // Layout
-export * from './layout/card';
 export * from './layout/header';
 export * from './layout/table';
