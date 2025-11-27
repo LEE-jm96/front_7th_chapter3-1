@@ -1,9 +1,8 @@
 import React from 'react';
 
 import { Button, Table, Alert, Dialog, FormInput, FormSelect, FormTextarea } from '@/components/ui';
-import type { StatDetail } from '@/types/management';
 import type { Post } from '@/services/postService';
-import type { ManagementViewProps } from './types';
+import type { ManagementViewProps, StatDetail } from './types';
 
 export const ManagementView: React.FC<ManagementViewProps> = ({
   entityType,

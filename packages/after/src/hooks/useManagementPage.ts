@@ -4,7 +4,11 @@ import { userService } from '@/services/userService';
 import { postService } from '@/services/postService';
 import type { User } from '@/services/userService';
 import type { Post } from '@/services/postService';
-import type { StatsSummary, ManagementEntityType, ManagementEntity } from '@/types/management';
+import type {
+  StatsSummary,
+  ManagementEntityType,
+  ManagementEntity,
+} from '@/components/ui/management/types';
 import type { Column } from '@/components/ui/layout/types';
 
 interface UseManagementPageResult {
