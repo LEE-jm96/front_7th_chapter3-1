@@ -1,21 +1,26 @@
 import React from 'react';
+import { useFormContext, Controller } from 'react-hook-form';
 import { Textarea } from './textarea';
 import { cn } from '@/lib/utils';
 import type { FormTextareaProps } from './types';
 
-// Textarea Component - Yet another inconsistent API
+// React Hook Form과 통합된 FormTextarea
 export const FormTextarea: React.FC<FormTextareaProps> = ({
   name,
-  value,
-  onChange,
   label,
   placeholder,
   required = false,
   disabled = false,
-  error,
   helpText,
   rows = 4,
 }) => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
+
+  const error = errors[name]?.message as string | undefined;
+
   return (
     <div className="form-group">
       {label && (
@@ -25,19 +30,26 @@ export const FormTextarea: React.FC<FormTextareaProps> = ({
         </label>
       )}
 
-      <Textarea
-        id={name}
+      <Controller
         name={name}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        required={required}
-        disabled={disabled}
-        rows={rows}
-        aria-invalid={!!error}
-        className={cn(
-          'form-textarea',
-          error && 'error'
+        control={control}
+        render={({ field }) => (
+          <Textarea
+            id={name}
+            name={name}
+            value={field.value || ''}
+            onChange={(e) => field.onChange(e.target.value)}
+            onBlur={field.onBlur}
+            placeholder={placeholder}
+            required={required}
+            disabled={disabled}
+            rows={rows}
+            aria-invalid={!!error}
+            className={cn(
+              'form-textarea',
+              error && 'error'
+            )}
+          />
         )}
       />
 

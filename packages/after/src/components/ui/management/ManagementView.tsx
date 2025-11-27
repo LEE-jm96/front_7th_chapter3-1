@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormProvider } from 'react-hook-form';
 
 import { Button, Table, Alert, Dialog, FormInput, FormSelect, FormTextarea } from '@/components/ui';
 import type { Post } from '@/services/postService';
@@ -19,8 +20,7 @@ export const ManagementView: React.FC<ManagementViewProps> = ({
   isCreateModalOpen,
   isEditModalOpen,
   selectedItem,
-  formData,
-  handleFormChange,
+  formMethods,
   openCreateModal,
   closeCreateModal,
   closeEditModal,
@@ -213,246 +213,212 @@ export const ManagementView: React.FC<ManagementViewProps> = ({
         </div>
       </div>
 
-      <Dialog
-        isOpen={isCreateModalOpen}
-        onClose={closeCreateModal}
-        title={`새 ${entityType === 'user' ? '사용자' : '게시글'} 만들기`}
-        size="large"
-        showFooter
-        footerContent={
-          <>
-            <Button variant="secondary" size="md" onClick={closeCreateModal}>
-              취소
-            </Button>
-            <Button variant="primary" size="md" onClick={handleCreate}>
-              생성
-            </Button>
-          </>
-        }
-      >
-        <div>
-          {entityType === 'user' ? (
+      <FormProvider {...formMethods}>
+        <Dialog
+          isOpen={isCreateModalOpen}
+          onClose={closeCreateModal}
+          title={`새 ${entityType === 'user' ? '사용자' : '게시글'} 만들기`}
+          size="large"
+          showFooter
+          footerContent={
             <>
-              <FormInput
-                name="username"
-                value={formData.username || ''}
-                onChange={(value) => handleFormChange('username', value)}
-                label="사용자명"
-                placeholder="사용자명을 입력하세요"
-                required
-                width="full"
-                fieldType="username"
-              />
-              <FormInput
-                name="email"
-                value={formData.email || ''}
-                onChange={(value) => handleFormChange('email', value)}
-                label="이메일"
-                placeholder="이메일을 입력하세요"
-                type="email"
-                required
-                width="full"
-                fieldType="email"
-              />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <FormSelect
-                  name="role"
-                  value={formData.role || 'user'}
-                  onChange={(value) => handleFormChange('role', value)}
-                  options={[
-                    { value: 'user', label: '사용자' },
-                    { value: 'moderator', label: '운영자' },
-                    { value: 'admin', label: '관리자' },
-                  ]}
-                  label="역할"
-                  size="md"
-                />
-                <FormSelect
-                  name="status"
-                  value={formData.status || 'active'}
-                  onChange={(value) => handleFormChange('status', value)}
-                  options={[
-                    { value: 'active', label: '활성' },
-                    { value: 'inactive', label: '비활성' },
-                    { value: 'suspended', label: '정지' },
-                  ]}
-                  label="상태"
-                  size="md"
-                />
-              </div>
+              <Button variant="secondary" size="md" onClick={closeCreateModal}>
+                취소
+              </Button>
+              <Button variant="primary" size="md" onClick={handleCreate}>
+                생성
+              </Button>
             </>
-          ) : (
-            <>
-              <FormInput
-                name="title"
-                value={formData.title || ''}
-                onChange={(value) => handleFormChange('title', value)}
-                label="제목"
-                placeholder="게시글 제목을 입력하세요"
-                required
-                width="full"
-                fieldType="postTitle"
-              />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          }
+        >
+          <div>
+            {entityType === 'user' ? (
+              <>
                 <FormInput
-                  name="author"
-                  value={formData.author || ''}
-                  onChange={(value) => handleFormChange('author', value)}
-                  label="작성자"
-                  placeholder="작성자명"
+                  name="username"
+                  label="사용자명"
+                  placeholder="사용자명을 입력하세요"
                   required
                   width="full"
                 />
-                <FormSelect
-                  name="category"
-                  value={formData.category || ''}
-                  onChange={(value) => handleFormChange('category', value)}
-                  options={[
-                    { value: 'development', label: 'Development' },
-                    { value: 'design', label: 'Design' },
-                    { value: 'accessibility', label: 'Accessibility' },
-                  ]}
-                  label="카테고리"
-                  placeholder="카테고리 선택"
-                  size="md"
-                />
-              </div>
-              <FormTextarea
-                name="content"
-                value={formData.content || ''}
-                onChange={(value) => handleFormChange('content', value)}
-                label="내용"
-                placeholder="게시글 내용을 입력하세요"
-                rows={6}
-              />
-            </>
-          )}
-        </div>
-      </Dialog>
-
-      <Dialog
-        isOpen={isEditModalOpen}
-        onClose={closeEditModal}
-        title={`${entityType === 'user' ? '사용자' : '게시글'} 수정`}
-        size="large"
-        showFooter
-        footerContent={
-          <>
-            <Button variant="secondary" size="md" onClick={closeEditModal}>
-              취소
-            </Button>
-            <Button variant="primary" size="md" onClick={handleUpdate}>
-              수정 완료
-            </Button>
-          </>
-        }
-      >
-        <div>
-          {selectedItem && (
-            <Alert variant="info">
-              ID: {selectedItem.id} | 생성일: {selectedItem.createdAt}
-              {entityType === 'post' && ` | 조회수: ${(selectedItem as Post).views}`}
-            </Alert>
-          )}
-
-          {entityType === 'user' ? (
-            <>
-              <FormInput
-                name="username"
-                value={formData.username || ''}
-                onChange={(value) => handleFormChange('username', value)}
-                label="사용자명"
-                placeholder="사용자명을 입력하세요"
-                required
-                width="full"
-                fieldType="username"
-              />
-              <FormInput
-                name="email"
-                value={formData.email || ''}
-                onChange={(value) => handleFormChange('email', value)}
-                label="이메일"
-                placeholder="이메일을 입력하세요"
-                type="email"
-                required
-                width="full"
-                fieldType="email"
-              />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <FormSelect
-                  name="role"
-                  value={formData.role || 'user'}
-                  onChange={(value) => handleFormChange('role', value)}
-                  options={[
-                    { value: 'user', label: '사용자' },
-                    { value: 'moderator', label: '운영자' },
-                    { value: 'admin', label: '관리자' },
-                  ]}
-                  label="역할"
-                  size="md"
-                />
-                <FormSelect
-                  name="status"
-                  value={formData.status || 'active'}
-                  onChange={(value) => handleFormChange('status', value)}
-                  options={[
-                    { value: 'active', label: '활성' },
-                    { value: 'inactive', label: '비활성' },
-                    { value: 'suspended', label: '정지' },
-                  ]}
-                  label="상태"
-                  size="md"
-                />
-              </div>
-            </>
-          ) : (
-            <>
-              <FormInput
-                name="title"
-                value={formData.title || ''}
-                onChange={(value) => handleFormChange('title', value)}
-                label="제목"
-                placeholder="게시글 제목을 입력하세요"
-                required
-                width="full"
-                fieldType="postTitle"
-              />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <FormInput
-                  name="author"
-                  value={formData.author || ''}
-                  onChange={(value) => handleFormChange('author', value)}
-                  label="작성자"
-                  placeholder="작성자명"
+                  name="email"
+                  label="이메일"
+                  placeholder="이메일을 입력하세요"
+                  type="email"
                   required
                   width="full"
                 />
-                <FormSelect
-                  name="category"
-                  value={formData.category || ''}
-                  onChange={(value) => handleFormChange('category', value)}
-                  options={[
-                    { value: 'development', label: 'Development' },
-                    { value: 'design', label: 'Design' },
-                    { value: 'accessibility', label: 'Accessibility' },
-                  ]}
-                  label="카테고리"
-                  placeholder="카테고리 선택"
-                  size="md"
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                  <FormSelect
+                    name="role"
+                    options={[
+                      { value: 'user', label: '사용자' },
+                      { value: 'moderator', label: '운영자' },
+                      { value: 'admin', label: '관리자' },
+                    ]}
+                    label="역할"
+                    size="md"
+                  />
+                  <FormSelect
+                    name="status"
+                    options={[
+                      { value: 'active', label: '활성' },
+                      { value: 'inactive', label: '비활성' },
+                      { value: 'suspended', label: '정지' },
+                    ]}
+                    label="상태"
+                    size="md"
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <FormInput
+                  name="title"
+                  label="제목"
+                  placeholder="게시글 제목을 입력하세요"
+                  required
+                  width="full"
                 />
-              </div>
-              <FormTextarea
-                name="content"
-                value={formData.content || ''}
-                onChange={(value) => handleFormChange('content', value)}
-                label="내용"
-                placeholder="게시글 내용을 입력하세요"
-                rows={6}
-              />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                  <FormInput
+                    name="author"
+                    label="작성자"
+                    placeholder="작성자명"
+                    required
+                    width="full"
+                  />
+                  <FormSelect
+                    name="category"
+                    options={[
+                      { value: 'development', label: 'Development' },
+                      { value: 'design', label: 'Design' },
+                      { value: 'accessibility', label: 'Accessibility' },
+                    ]}
+                    label="카테고리"
+                    placeholder="카테고리 선택"
+                    size="md"
+                  />
+                </div>
+                <FormTextarea
+                  name="content"
+                  label="내용"
+                  placeholder="게시글 내용을 입력하세요"
+                  required
+                  rows={6}
+                />
+              </>
+            )}
+          </div>
+        </Dialog>
+
+        <Dialog
+          isOpen={isEditModalOpen}
+          onClose={closeEditModal}
+          title={`${entityType === 'user' ? '사용자' : '게시글'} 수정`}
+          size="large"
+          showFooter
+          footerContent={
+            <>
+              <Button variant="secondary" size="md" onClick={closeEditModal}>
+                취소
+              </Button>
+              <Button variant="primary" size="md" onClick={handleUpdate}>
+                수정 완료
+              </Button>
             </>
-          )}
-        </div>
-      </Dialog>
+          }
+        >
+          <div>
+            {selectedItem && (
+              <Alert variant="info">
+                ID: {selectedItem.id} | 생성일: {selectedItem.createdAt}
+                {entityType === 'post' && ` | 조회수: ${(selectedItem as Post).views}`}
+              </Alert>
+            )}
+
+            {entityType === 'user' ? (
+              <>
+                <FormInput
+                  name="username"
+                  label="사용자명"
+                  placeholder="사용자명을 입력하세요"
+                  required
+                  width="full"
+                />
+                <FormInput
+                  name="email"
+                  label="이메일"
+                  placeholder="이메일을 입력하세요"
+                  type="email"
+                  required
+                  width="full"
+                />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                  <FormSelect
+                    name="role"
+                    options={[
+                      { value: 'user', label: '사용자' },
+                      { value: 'moderator', label: '운영자' },
+                      { value: 'admin', label: '관리자' },
+                    ]}
+                    label="역할"
+                    size="md"
+                  />
+                  <FormSelect
+                    name="status"
+                    options={[
+                      { value: 'active', label: '활성' },
+                      { value: 'inactive', label: '비활성' },
+                      { value: 'suspended', label: '정지' },
+                    ]}
+                    label="상태"
+                    size="md"
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <FormInput
+                  name="title"
+                  label="제목"
+                  placeholder="게시글 제목을 입력하세요"
+                  required
+                  width="full"
+                />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                  <FormInput
+                    name="author"
+                    label="작성자"
+                    placeholder="작성자명"
+                    required
+                    width="full"
+                  />
+                  <FormSelect
+                    name="category"
+                    options={[
+                      { value: 'development', label: 'Development' },
+                      { value: 'design', label: 'Design' },
+                      { value: 'accessibility', label: 'Accessibility' },
+                    ]}
+                    label="카테고리"
+                    placeholder="카테고리 선택"
+                    size="md"
+                  />
+                </div>
+                <FormTextarea
+                  name="content"
+                  label="내용"
+                  placeholder="게시글 내용을 입력하세요"
+                  required
+                  rows={6}
+                />
+              </>
+            )}
+          </div>
+        </Dialog>
+      </FormProvider>
     </div>
   );
 };

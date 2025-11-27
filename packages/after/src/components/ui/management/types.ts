@@ -1,6 +1,8 @@
+import type { UseFormReturn } from 'react-hook-form';
 import type { Column } from '@/components/ui/layout/types';
 import type { User } from '@/services/userService';
 import type { Post } from '@/services/postService';
+import type { UserFormData, PostFormData } from '@/lib/schemas';
 
 export type ManagementEntity = User | Post;
 export type ManagementEntityType = 'user' | 'post';
@@ -34,8 +36,7 @@ export interface ManagementViewProps {
   isCreateModalOpen: boolean;
   isEditModalOpen: boolean;
   selectedItem: ManagementEntity | null;
-  formData: Record<string, any>;
-  handleFormChange: (field: string, value: any) => void;
+  formMethods: UseFormReturn<UserFormData | PostFormData>;
   openCreateModal: () => void;
   closeCreateModal: () => void;
   closeEditModal: () => void;

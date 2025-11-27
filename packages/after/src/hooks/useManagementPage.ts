@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import type { UseFormReturn } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { userService } from '@/services/userService';
 import { postService } from '@/services/postService';
@@ -10,6 +13,7 @@ import type {
   ManagementEntity,
 } from '@/components/ui/management/types';
 import type { Column } from '@/components/ui/layout/types';
+import { userSchema, postSchema, type UserFormData, type PostFormData } from '@/lib/schemas';
 
 interface UseManagementPageResult {
   entityType: ManagementEntityType;
@@ -26,8 +30,7 @@ interface UseManagementPageResult {
   isCreateModalOpen: boolean;
   isEditModalOpen: boolean;
   selectedItem: ManagementEntity | null;
-  formData: Record<string, any>;
-  handleFormChange: (field: string, value: any) => void;
+  formMethods: UseFormReturn<UserFormData | PostFormData>;
   openCreateModal: () => void;
   closeCreateModal: () => void;
   closeEditModal: () => void;
@@ -48,7 +51,42 @@ export const useManagementPage = (): UseManagementPageResult => {
   const [alertMessage, setAlertMessage] = useState('');
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [formData, setFormData] = useState<Record<string, any>>({});
+
+  // entityType에 따른 resolver와 defaultValues 메모이제이션
+  const resolver = useMemo<Resolver<UserFormData | PostFormData>>(
+    () => zodResolver(entityType === 'user' ? userSchema : postSchema),
+    [entityType]
+  );
+
+  const defaultValues = useMemo(
+    () =>
+      entityType === 'user'
+        ? {
+            username: '',
+            email: '',
+            role: 'user' as const,
+            status: 'active' as const,
+          }
+        : {
+            title: '',
+            author: '',
+            category: 'development' as const,
+            content: '',
+          },
+    [entityType]
+  );
+
+  // React Hook Form 설정
+  const formMethods = useForm<UserFormData | PostFormData>({
+    resolver,
+    mode: 'onChange', // 실시간 검증
+    defaultValues,
+  });
+
+  // entityType 변경 시 폼 리셋
+  useEffect(() => {
+    formMethods.reset(defaultValues);
+  }, [entityType, defaultValues, formMethods]);
 
   const loadData = useCallback(async () => {
     try {
@@ -63,41 +101,47 @@ export const useManagementPage = (): UseManagementPageResult => {
 
   useEffect(() => {
     loadData();
-    setFormData({});
     setIsCreateModalOpen(false);
     setIsEditModalOpen(false);
     setSelectedItem(null);
   }, [entityType, loadData]);
 
   const handleCreate = useCallback(async () => {
+    const isValid = await formMethods.trigger();
+    if (!isValid) return;
+
+    const formData = formMethods.getValues();
+
     try {
       if (entityType === 'user') {
+        const userData = formData as UserFormData;
         await userService.create({
-          username: formData.username,
-          email: formData.email,
-          role: formData.role || 'user',
-          status: formData.status || 'active',
+          username: userData.username,
+          email: userData.email,
+          role: userData.role,
+          status: userData.status,
         });
       } else {
+        const postData = formData as PostFormData;
         await postService.create({
-          title: formData.title,
-          content: formData.content || '',
-          author: formData.author,
-          category: formData.category,
-          status: formData.status || 'draft',
+          title: postData.title,
+          content: postData.content || '',
+          author: postData.author,
+          category: postData.category,
+          status: 'draft',
         });
       }
 
       await loadData();
       setIsCreateModalOpen(false);
-      setFormData({});
+      formMethods.reset();
       setAlertMessage(`${entityType === 'user' ? '사용자' : '게시글'}가 생성되었습니다`);
       setShowSuccessAlert(true);
     } catch (error: any) {
       setErrorMessage(error?.message || '생성에 실패했습니다');
       setShowErrorAlert(true);
     }
-  }, [entityType, formData, loadData]);
+  }, [entityType, formMethods, loadData]);
 
   const handleEdit = useCallback(
     (item: ManagementEntity) => {
@@ -105,7 +149,7 @@ export const useManagementPage = (): UseManagementPageResult => {
 
       if (entityType === 'user') {
         const user = item as User;
-        setFormData({
+        formMethods.reset({
           username: user.username,
           email: user.email,
           role: user.role,
@@ -113,33 +157,39 @@ export const useManagementPage = (): UseManagementPageResult => {
         });
       } else {
         const post = item as Post;
-        setFormData({
+        formMethods.reset({
           title: post.title,
           content: post.content,
           author: post.author,
           category: post.category,
-          status: post.status,
         });
       }
 
       setIsEditModalOpen(true);
     },
-    [entityType],
+    [entityType, formMethods],
   );
 
   const handleUpdate = useCallback(async () => {
     if (!selectedItem) return;
 
+    const isValid = await formMethods.trigger();
+    if (!isValid) return;
+
+    const formData = formMethods.getValues();
+
     try {
       if (entityType === 'user') {
-        await userService.update(selectedItem.id, formData);
+        const userData = formData as UserFormData;
+        await userService.update(selectedItem.id, userData);
       } else {
-        await postService.update(selectedItem.id, formData);
+        const postData = formData as PostFormData;
+        await postService.update(selectedItem.id, postData);
       }
 
       await loadData();
       setIsEditModalOpen(false);
-      setFormData({});
+      formMethods.reset();
       setSelectedItem(null);
       setAlertMessage(`${entityType === 'user' ? '사용자' : '게시글'}가 수정되었습니다`);
       setShowSuccessAlert(true);
@@ -147,7 +197,7 @@ export const useManagementPage = (): UseManagementPageResult => {
       setErrorMessage(error?.message || '수정에 실패했습니다');
       setShowErrorAlert(true);
     }
-  }, [entityType, formData, loadData, selectedItem]);
+  }, [entityType, formMethods, loadData, selectedItem]);
 
   const handleDelete = useCallback(
     async (id: number) => {
@@ -276,20 +326,16 @@ export const useManagementPage = (): UseManagementPageResult => {
     [entityType],
   );
 
-  const handleFormChange = useCallback((field: string, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  }, []);
-
   const closeCreateModal = useCallback(() => {
     setIsCreateModalOpen(false);
-    setFormData({});
-  }, []);
+    formMethods.reset();
+  }, [formMethods]);
 
   const closeEditModal = useCallback(() => {
     setIsEditModalOpen(false);
-    setFormData({});
+    formMethods.reset();
     setSelectedItem(null);
-  }, []);
+  }, [formMethods]);
 
   const dismissSuccessAlert = useCallback(() => {
     setShowSuccessAlert(false);
@@ -316,8 +362,7 @@ export const useManagementPage = (): UseManagementPageResult => {
     isCreateModalOpen,
     isEditModalOpen,
     selectedItem,
-    formData,
-    handleFormChange,
+    formMethods,
     openCreateModal: () => setIsCreateModalOpen(true),
     closeCreateModal,
     closeEditModal,
