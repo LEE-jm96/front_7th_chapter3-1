@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "../tokens/colors.css";
+@import "../tokens/typography.css";
 
 @theme {
   --color-primary: hsl(var(--primary));
@@ -31,6 +32,21 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
+  --font-sans: var(--font-family-sans);
+  --font-size-xs: var(--font-size-xs);
+  --font-size-sm: var(--font-size-sm);
+  --font-size-base: var(--font-size-md);
+  --font-size-lg: var(--font-size-lg);
+  --font-size-xl: var(--font-size-xl);
+  --font-size-2xl: var(--font-size-2xl);
+  --font-size-3xl: var(--font-size-3xl);
+  --line-height-tight: var(--line-height-tight);
+  --line-height-normal: var(--line-height-normal);
+  --line-height-relaxed: var(--line-height-relaxed);
+  --font-weight-regular: var(--font-weight-regular);
+  --font-weight-medium: var(--font-weight-medium);
+  --font-weight-semibold: var(--font-weight-semibold);
+  --font-weight-bold: var(--font-weight-bold);
 }
 
 * {
@@ -129,17 +145,17 @@ textarea {
   display: block;
   margin-bottom: 6px;
   color: hsl(var(--foreground));
-  font-size: 13px;
-  font-weight: bold;
-  font-family: Arial, sans-serif;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-family-sans);
 }
 
 .form-input,
 .form-select {
   width: 100%;
   padding: 8px 10px !important;
-  font-size: 14px !important;
-  font-family: Arial, sans-serif !important;
+  font-size: var(--font-size-sm) !important;
+  font-family: var(--font-family-sans) !important;
   color: hsl(var(--foreground)) !important;
   border: 1px solid hsl(var(--border)) !important;
   border-radius: 3px !important;
@@ -168,8 +184,8 @@ textarea {
 
 .form-helper-text {
   color: hsl(var(--muted-foreground));
-  font-size: 12px;
-  font-family: Arial, sans-serif;
+  font-size: var(--font-size-xs);
+  font-family: var(--font-family-sans);
   margin-top: 4px;
 }
 
@@ -538,8 +554,8 @@ textarea {
 .table {
   width: 100%;
   border-collapse: collapse;
-  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  font-size: 0.875rem;
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-sm);
   background-color: hsl(var(--card));
   color: hsl(var(--foreground));
 }
@@ -551,8 +567,8 @@ textarea {
 .table th {
   padding: 16px;
   text-align: left;
-  font-weight: 500;
-  font-size: 0.75rem;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xs);
   color: hsl(var(--muted-foreground));
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -563,6 +579,7 @@ textarea {
   padding: 16px;
   color: hsl(var(--foreground));
   border-bottom: 1px solid hsl(var(--border));
+  font-size: var(--font-size-sm);
 }
 
 .table tbody tr:last-child td {
@@ -646,8 +663,8 @@ textarea {
 
 .modal-title {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: 500;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
   color: hsl(var(--foreground));
 }
 
