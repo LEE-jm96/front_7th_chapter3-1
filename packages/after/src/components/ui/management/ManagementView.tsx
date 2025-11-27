@@ -58,8 +58,29 @@ export const ManagementView: React.FC<ManagementViewProps> = ({
   handleDelete,
   handleStatusAction,
 }) => {
+  const palette = {
+    pageBg: 'hsl(var(--muted))',
+    containerBg: 'hsl(var(--card))',
+    containerBorder: 'hsl(var(--border))',
+    heading: 'hsl(var(--foreground))',
+    subheading: 'hsl(var(--muted-foreground))',
+    divider: 'hsl(var(--border))',
+    tabActiveBg: 'hsl(var(--primary))',
+    tabActiveColor: 'hsl(var(--primary-foreground))',
+    tabInactiveBg: 'hsl(var(--secondary))',
+    tabInactiveColor: 'hsl(var(--secondary-foreground))',
+    buttonBorder: 'hsl(var(--border))',
+    metricLabel: 'hsl(var(--muted-foreground))',
+    metricValue: 'hsl(var(--primary))',
+    highlightBg: 'rgba(37, 99, 235, 0.12)',
+    highlightBorder: 'rgba(37, 99, 235, 0.4)',
+    statCardBg: 'hsl(var(--card))',
+    statCardBorder: 'hsl(var(--border))',
+    tableBorder: 'hsl(var(--border))',
+  };
+
   return (
-    <div style={{ minHeight: '100vh', background: '#f0f0f0' }}>
+    <div style={{ minHeight: '100vh', background: palette.pageBg }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
         <div style={{ marginBottom: '20px' }}>
           <h1
@@ -67,25 +88,27 @@ export const ManagementView: React.FC<ManagementViewProps> = ({
               fontSize: '24px',
               fontWeight: 'bold',
               marginBottom: '5px',
-              color: '#333',
+              color: palette.heading,
             }}
           >
             관리 시스템
           </h1>
-          <p style={{ color: '#666', fontSize: '14px' }}>사용자와 게시글을 관리하세요</p>
+          <p style={{ color: palette.subheading, fontSize: '14px' }}>
+            사용자와 게시글을 관리하세요
+          </p>
         </div>
 
         <div
           style={{
-            background: 'white',
-            border: '1px solid #ddd',
+            background: palette.containerBg,
+            border: `1px solid ${palette.containerBorder}`,
             padding: '10px',
           }}
         >
           <div
             style={{
               marginBottom: '15px',
-              borderBottom: '2px solid #ccc',
+              borderBottom: `2px solid ${palette.divider}`,
               paddingBottom: '5px',
             }}
           >
@@ -96,9 +119,9 @@ export const ManagementView: React.FC<ManagementViewProps> = ({
                 marginRight: '5px',
                 fontSize: '14px',
                 fontWeight: entityType === 'post' ? 'bold' : 'normal',
-                border: '1px solid #999',
-                background: entityType === 'post' ? '#1976d2' : '#f5f5f5',
-                color: entityType === 'post' ? 'white' : '#333',
+                border: `1px solid ${palette.buttonBorder}`,
+                background: entityType === 'post' ? palette.tabActiveBg : palette.tabInactiveBg,
+                color: entityType === 'post' ? palette.tabActiveColor : palette.tabInactiveColor,
                 cursor: 'pointer',
                 borderRadius: '3px',
               }}
@@ -111,9 +134,9 @@ export const ManagementView: React.FC<ManagementViewProps> = ({
                 padding: '8px 16px',
                 fontSize: '14px',
                 fontWeight: entityType === 'user' ? 'bold' : 'normal',
-                border: "1px solid #999",
-                background: entityType === 'user' ? '#1976d2' : '#f5f5f5',
-                color: entityType === 'user' ? 'white' : '#333',
+                border: `1px solid ${palette.buttonBorder}`,
+                background: entityType === 'user' ? palette.tabActiveBg : palette.tabInactiveBg,
+                color: entityType === 'user' ? palette.tabActiveColor : palette.tabInactiveColor,
                 cursor: 'pointer',
                 borderRadius: '3px',
               }}
@@ -148,14 +171,16 @@ export const ManagementView: React.FC<ManagementViewProps> = ({
             <div
               style={{
                 padding: '12px 15px',
-                background: '#e3f2fd',
-                border: '1px solid #90caf9',
+                background: palette.highlightBg,
+                border: `1px solid ${palette.highlightBorder}`,
                 borderRadius: '3px',
                 marginBottom: '15px',
               }}
             >
-              <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>전체</div>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1976d2' }}>
+              <div style={{ fontSize: '12px', color: palette.metricLabel, marginBottom: '4px' }}>
+                전체
+              </div>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: palette.metricValue }}>
                 {stats.total}
               </div>
             </div>
@@ -174,12 +199,14 @@ export const ManagementView: React.FC<ManagementViewProps> = ({
                     key={`${stat.label}-${index}`}
                     style={{
                       padding: '12px 15px',
-                      background: 'white',
-                      border: '1px solid #ddd',
+                      background: palette.statCardBg,
+                      border: `1px solid ${palette.statCardBorder}`,
                       borderRadius: '3px',
                     }}
                   >
-                    <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+                    <div
+                      style={{ fontSize: '12px', color: palette.metricLabel, marginBottom: '4px' }}
+                    >
                       {stat.label}
                     </div>
                     <div style={{ fontSize: '24px', fontWeight: 'bold', color: stat.color }}>
@@ -190,7 +217,13 @@ export const ManagementView: React.FC<ManagementViewProps> = ({
               )}
             </div>
 
-            <div style={{ border: "1px solid #ddd", background: 'white', overflow: 'auto' }}>
+            <div
+              style={{
+                border: `1px solid ${palette.tableBorder}`,
+                background: palette.containerBg,
+                overflow: 'auto',
+              }}
+            >
               <Table
                 columns={columns}
                 data={data}

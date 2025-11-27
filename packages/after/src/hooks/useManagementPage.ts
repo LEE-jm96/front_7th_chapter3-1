@@ -236,7 +236,7 @@ export const useManagementPage = (): UseManagementPageResult => {
       stat3: {
         label: '보관됨',
         value: posts.filter((p) => p.status === 'archived').length,
-        color: 'rgba(0, 0, 0, 0.6)',
+        color: 'hsl(var(--foreground))',
       },
       stat4: {
         label: '총 조회수',

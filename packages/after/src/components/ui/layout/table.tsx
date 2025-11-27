@@ -10,11 +10,11 @@ function TableBase({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-x-auto"
+      className="table-container relative w-full overflow-x-auto"
     >
       <table
         data-slot="table"
-        className={cn("w-full caption-bottom text-sm", className)}
+        className={cn("table w-full caption-bottom text-sm", className)}
         {...props}
       />
     </div>
@@ -109,6 +109,13 @@ export const Table: React.FC<TableProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [sortColumn, setSortColumn] = useState('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
+  const palette = {
+    border: 'hsl(var(--border))',
+    surface: 'hsl(var(--card))',
+    text: 'hsl(var(--foreground))',
+    mutedText: 'hsl(var(--muted-foreground))',
+  };
 
   useEffect(() => {
     setTableData(data);
@@ -254,9 +261,11 @@ export const Table: React.FC<TableProps> = ({
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
               padding: '8px 12px',
-              border: '1px solid #ddd',
+              border: `1px solid ${palette.border}`,
               borderRadius: '4px',
               width: '300px',
+              background: palette.surface,
+              color: palette.text,
             }}
           />
         </div>
@@ -322,10 +331,11 @@ export const Table: React.FC<TableProps> = ({
             disabled={currentPage === 1}
             style={{
               padding: '6px 12px',
-              border: '1px solid #ddd',
-              background: 'white',
+              border: `1px solid ${palette.border}`,
+              background: palette.surface,
               borderRadius: '4px',
               cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+              color: currentPage === 1 ? palette.mutedText : palette.text,
             }}
           >
             이전
@@ -338,10 +348,11 @@ export const Table: React.FC<TableProps> = ({
             disabled={currentPage === totalPages}
             style={{
               padding: '6px 12px',
-              border: '1px solid #ddd',
-              background: 'white',
+              border: `1px solid ${palette.border}`,
+              background: palette.surface,
               borderRadius: '4px',
               cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+              color: currentPage === totalPages ? palette.mutedText : palette.text,
             }}
           >
             다음
