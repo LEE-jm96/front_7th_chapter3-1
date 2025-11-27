@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import type { UseFormReturn } from 'react-hook-form';
+import type { UseFormReturn, Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { userService } from '@/services/userService';
@@ -129,7 +129,7 @@ export const useManagementPage = (): UseManagementPageResult => {
           author: postData.author,
           category: postData.category,
           status: 'draft',
-        });
+        } as Parameters<typeof postService.create>[0]);
       }
 
       await loadData();
