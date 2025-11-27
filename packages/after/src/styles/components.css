@@ -1,5 +1,110 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-danger: hsl(var(--danger));
+  --color-danger-foreground: hsl(var(--danger-foreground));
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+  --color-info: hsl(var(--info));
+  --color-info-foreground: hsl(var(--info-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+  --color-error: hsl(var(--error));
+  --color-error-foreground: hsl(var(--error-foreground));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --danger: 0 84.2% 60.2%;
+    --danger-foreground: 0 0% 98%;
+    --success: 142.1 76.2% 36.3%;
+    --success-foreground: 0 0% 98%;
+    --info: 199.1 89.1% 48.2%;
+    --info-foreground: 0 0% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 98%;
+    --error: 0 84.2% 60.2%;
+    --error-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --danger: 0 62.8% 30.6%;
+    --danger-foreground: 0 0% 98%;
+    --success: 142.1 70.6% 45.3%;
+    --success-foreground: 0 0% 98%;
+    --info: 199.1 89.1% 48.2%;
+    --info-foreground: 0 0% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 98%;
+    --error: 0 62.8% 30.6%;
+    --error-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+  }
+}
+
 * {
   margin: 0;
+}
+
+/* button은 Tailwind 클래스로 패딩을 제어하므로 제외 */
+input,
+select,
+textarea {
   padding: 0;
 }
 
@@ -96,14 +201,16 @@
 .form-input,
 .form-select {
   width: 100%;
-  padding: 8px 10px;
-  font-size: 14px;
-  font-family: Arial, sans-serif;
-  color: #000;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  background-color: #fff;
-  box-sizing: border-box;
+  padding: 8px 10px !important;
+  font-size: 14px !important;
+  font-family: Arial, sans-serif !important;
+  color: #000 !important;
+  border: 1px solid #ccc !important;
+  border-radius: 3px !important;
+  background-color: #fff !important;
+  box-sizing: border-box !important;
+  height: auto !important;
+  min-height: auto !important;
 }
 
 .form-input:focus,
@@ -442,35 +549,35 @@
 
 /* Textarea styles */
 .form-textarea {
-  width: 100%;
-  min-height: 6em;
-  padding: 16.5px 14px;
-  font-size: 16px;
-  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  font-weight: 400;
-  line-height: 1.1876em;
-  color: rgba(0, 0, 0, 0.87);
-  border: 1px solid rgba(0, 0, 0, 0.23);
-  border-radius: 4px;
-  background-color: #fff;
-  box-sizing: border-box;
-  transition: border-color 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
-  outline: none;
-  resize: vertical;
+  width: 100% !important;
+  min-height: 6em !important;
+  padding: 16.5px 14px !important;
+  font-size: 16px !important;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif !important;
+  font-weight: 400 !important;
+  line-height: 1.1876em !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+  border: 1px solid rgba(0, 0, 0, 0.23) !important;
+  border-radius: 4px !important;
+  background-color: #fff !important;
+  box-sizing: border-box !important;
+  transition: border-color 200ms cubic-bezier(0, 0, 0.2, 1) 0ms !important;
+  outline: none !important;
+  resize: vertical !important;
 }
 
 .form-textarea:focus {
-  border-color: #1976d2;
-  border-width: 2px;
-  padding: 15.5px 13px;
+  border-color: #1976d2 !important;
+  border-width: 2px !important;
+  padding: 15.5px 13px !important;
 }
 
 .form-textarea.error {
-  border-color: #d32f2f;
+  border-color: #d32f2f !important;
 }
 
 .form-textarea:disabled {
-  background-color: rgba(0, 0, 0, 0.12);
+  background-color: rgba(0, 0, 0, 0.12) !important;
 }
 
 /* Loading spinner */
@@ -633,4 +740,45 @@
   display: flex;
   gap: 8px;
   justify-content: flex-end;
+}
+
+/* Dialog styles (shadcn Dialog with Modal styling) */
+[data-slot="dialog-overlay"] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+[data-slot="dialog-content"] {
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow:
+    0px 11px 15px -7px rgba(0, 0, 0, 0.2),
+    0px 24px 38px 3px rgba(0, 0, 0, 0.14),
+    0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  padding: 0;
+}
+
+[data-slot="dialog-content"].modal-small {
+  width: 100%;
+  max-width: 400px;
+}
+
+[data-slot="dialog-content"].modal-medium {
+  width: 100%;
+  max-width: 600px;
+}
+
+[data-slot="dialog-content"].modal-large {
+  width: 100%;
+  max-width: 900px;
 }

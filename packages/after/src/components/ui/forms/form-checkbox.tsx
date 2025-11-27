@@ -1,16 +1,7 @@
 import React from 'react';
+import type { FormCheckboxProps } from './types';
 
 // Checkbox Component - Completely different approach again
-interface FormCheckboxProps {
-  name: string;
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  label: string;
-  disabled?: boolean;
-  error?: string;
-  hint?: string;
-}
-
 export const FormCheckbox: React.FC<FormCheckboxProps> = ({
   name,
   checked,
@@ -59,3 +50,4 @@ export const FormCheckbox: React.FC<FormCheckboxProps> = ({
     </div>
   );
 };
+

@@ -1,25 +1,9 @@
 import React, { useState } from 'react';
+import { Input } from './input';
+import { cn } from '@/lib/utils';
+import type { FormInputProps } from './types';
 
 // 🚨 Bad Practice: UI 컴포넌트가 도메인 규칙을 알고 있음
-interface FormInputProps {
-  name: string;
-  value: string;
-  onChange: (value: string) => void;
-  label?: string;
-  type?: 'text' | 'email' | 'password' | 'number' | 'url';
-  placeholder?: string;
-  required?: boolean;
-  disabled?: boolean;
-  error?: string;
-  helpText?: string;
-  width?: 'small' | 'medium' | 'large' | 'full';
-
-  // 🚨 도메인 관심사 추가
-  fieldType?: 'username' | 'email' | 'postTitle' | 'slug' | 'normal';
-  entityType?: 'user' | 'post'; // 엔티티 타입까지 알고 있음
-  checkBusinessRules?: boolean; // 비즈니스 규칙 검사 여부
-}
-
 export const FormInput: React.FC<FormInputProps> = ({
   name,
   value,
@@ -97,10 +81,12 @@ export const FormInput: React.FC<FormInputProps> = ({
   };
 
   const displayError = error || internalError;
-  const inputClasses = ['form-input', displayError && 'error', `input-width-${width}`]
-    .filter(Boolean)
-    .join(' ');
-  const helperClasses = ['form-helper-text', displayError && 'error'].filter(Boolean).join(' ');
+  const widthClasses = {
+    small: 'w-[200px]',
+    medium: 'w-[300px]',
+    large: 'w-[400px]',
+    full: 'w-full',
+  };
 
   return (
     <div className="form-group">
@@ -111,7 +97,7 @@ export const FormInput: React.FC<FormInputProps> = ({
         </label>
       )}
 
-      <input
+      <Input
         id={name}
         name={name}
         type={type}
@@ -120,11 +106,21 @@ export const FormInput: React.FC<FormInputProps> = ({
         placeholder={placeholder}
         required={required}
         disabled={disabled}
-        className={inputClasses}
+        aria-invalid={!!displayError}
+        className={cn(
+          'form-input',
+          widthClasses[width],
+          displayError && 'error'
+        )}
       />
 
-      {displayError && <span className={helperClasses}>{displayError}</span>}
-      {helpText && !displayError && <span className="form-helper-text">{helpText}</span>}
+      {displayError && (
+        <span className={cn('form-helper-text error')}>{displayError}</span>
+      )}
+      {helpText && !displayError && (
+        <span className="form-helper-text">{helpText}</span>
+      )}
     </div>
   );
 };
+

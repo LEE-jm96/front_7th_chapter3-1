@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Badge } from '../components/atoms';
-import { Alert, Table, Modal } from '../components/organisms';
-import { FormInput, FormSelect, FormTextarea } from '../components/molecules';
+import { Button, Table, Alert, Dialog, FormInput, FormSelect, FormTextarea } from '../components/ui';
 import { userService } from '../services/userService';
 import { postService } from '../services/postService';
 import type { User } from '../services/userService';
@@ -442,7 +440,7 @@ export const ManagementPage: React.FC = () => {
         </div>
       </div>
 
-      <Modal
+      <Dialog
         isOpen={isCreateModalOpen}
         onClose={() => {
           setIsCreateModalOpen(false);
@@ -567,9 +565,9 @@ export const ManagementPage: React.FC = () => {
             </>
           )}
         </div>
-      </Modal>
+      </Dialog>
 
-      <Modal
+      <Dialog
         isOpen={isEditModalOpen}
         onClose={() => {
           setIsEditModalOpen(false);
@@ -703,7 +701,7 @@ export const ManagementPage: React.FC = () => {
             </>
           )}
         </div>
-      </Modal>
+      </Dialog>
     </div>
   );
 };

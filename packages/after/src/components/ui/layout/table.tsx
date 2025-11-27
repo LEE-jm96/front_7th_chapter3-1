@@ -1,35 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import { Badge } from '../atoms/Badge';
-import { Button } from '../atoms/Button';
+import * as React from "react"
+import { useState, useEffect } from 'react';
+import { Badge } from '../feedback/badge';
+import { Button } from '../actions/button';
+import { cn } from "@/lib/utils"
+import type { TableProps } from "./types"
 
-interface Column {
-  key: string;
-  header: string;
-  width?: string;
-  sortable?: boolean;
+// shadcn Table 기본 컴포넌트들
+function TableBase({ className, ...props }: React.ComponentProps<"table">) {
+  return (
+    <div
+      data-slot="table-container"
+      className="relative w-full overflow-x-auto"
+    >
+      <table
+        data-slot="table"
+        className={cn("w-full caption-bottom text-sm", className)}
+        {...props}
+      />
+    </div>
+  )
 }
 
-// 🚨 Bad Practice: UI 컴포넌트가 도메인 타입을 알고 있음
-interface TableProps {
-  columns?: Column[];
-  data?: any[];
-  striped?: boolean;
-  bordered?: boolean;
-  hover?: boolean;
-  pageSize?: number;
-  searchable?: boolean;
-  sortable?: boolean;
-  onRowClick?: (row: any) => void;
-
-  // 🚨 도메인 관심사 추가
-  entityType?: 'user' | 'post';
-  onEdit?: (item: any) => void;
-  onDelete?: (id: number) => void;
-  onPublish?: (id: number) => void;
-  onArchive?: (id: number) => void;
-  onRestore?: (id: number) => void;
+function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
+  return (
+    <thead
+      data-slot="table-header"
+      className={cn("[&_tr]:border-b", className)}
+      {...props}
+    />
+  )
 }
 
+function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
+  return (
+    <tbody
+      data-slot="table-body"
+      className={cn("[&_tr:last-child]:border-0", className)}
+      {...props}
+    />
+  )
+}
+
+function TableRow({ 
+  className, 
+  onClick,
+  ...props 
+}: React.ComponentProps<"tr"> & { onClick?: () => void }) {
+  return (
+    <tr
+      data-slot="table-row"
+      className={cn(
+        "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors",
+        onClick && "cursor-pointer",
+        className
+      )}
+      onClick={onClick}
+      {...props}
+    />
+  )
+}
+
+function TableHead({ className, ...props }: React.ComponentProps<"th">) {
+  return (
+    <th
+      data-slot="table-head"
+      className={cn(
+        "text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function TableCell({ className, ...props }: React.ComponentProps<"td">) {
+  return (
+    <td
+      data-slot="table-cell"
+      className={cn(
+        "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+// 기존 props 구조를 유지하는 Table 컴포넌트
 export const Table: React.FC<TableProps> = ({
   columns,
   data = [],
@@ -93,32 +150,20 @@ export const Table: React.FC<TableProps> = ({
 
   const totalPages = Math.ceil(filteredData.length / pageSize);
 
-  const tableClasses = [
-    'table',
-    striped && 'table-striped',
-    bordered && 'table-bordered',
-    hover && 'table-hover',
-  ]
-    .filter(Boolean)
-    .join(' ');
-
   const actualColumns =
     columns ||
     (tableData[0]
       ? Object.keys(tableData[0]).map((key) => ({ key, header: key, width: undefined }))
       : []);
 
-  // 🚨 Bad Practice: Table 컴포넌트가 도메인별 렌더링 로직을 알고 있음
   const renderCell = (row: any, columnKey: string) => {
     const value = row[columnKey];
 
-    // 도메인별 특수 렌더링
     if (entityType === 'user') {
       if (columnKey === 'role') {
         return <Badge userRole={value} showIcon />;
       }
       if (columnKey === 'status') {
-        // User status를 Badge status로 변환
         const badgeStatus =
           value === 'active' ? 'published' : value === 'inactive' ? 'draft' : 'rejected';
         return <Badge status={badgeStatus} showIcon />;
@@ -191,7 +236,6 @@ export const Table: React.FC<TableProps> = ({
       }
     }
 
-    // React Element면 그대로 렌더링
     if (React.isValidElement(value)) {
       return value;
     }
@@ -218,21 +262,25 @@ export const Table: React.FC<TableProps> = ({
         </div>
       )}
 
-      <table className={tableClasses}>
-        <thead>
-          <tr>
+      <TableBase className={cn(
+        striped && "table-striped",
+        bordered && "table-bordered",
+        hover && "table-hover"
+      )}>
+        <TableHeader>
+          <TableRow>
             {actualColumns.map((column) => (
-              <th
+              <TableHead
                 key={column.key}
                 style={column.width ? { width: column.width } : undefined}
                 onClick={() => sortable && handleSort(column.key)}
+                className={cn(sortable && "cursor-pointer")}
               >
                 <div
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: '4px',
-                    cursor: sortable ? 'pointer' : 'default',
                   }}
                 >
                   {column.header}
@@ -240,26 +288,25 @@ export const Table: React.FC<TableProps> = ({
                     <span>{sortDirection === 'asc' ? '↑' : '↓'}</span>
                   )}
                 </div>
-              </th>
+              </TableHead>
             ))}
-          </tr>
-        </thead>
-        <tbody>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {paginatedData.map((row, rowIndex) => (
-            <tr
+            <TableRow
               key={rowIndex}
               onClick={() => onRowClick?.(row)}
-              style={{ cursor: onRowClick ? 'pointer' : 'default' }}
             >
               {actualColumns.map((column) => (
-                <td key={column.key}>
+                <TableCell key={column.key}>
                   {entityType ? renderCell(row, column.key) : row[column.key]}
-                </td>
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </TableBase>
 
       {totalPages > 1 && (
         <div
@@ -304,3 +351,14 @@ export const Table: React.FC<TableProps> = ({
     </div>
   );
 };
+
+// shadcn 기본 컴포넌트들도 export
+export {
+  TableBase as TableBase,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+}
+
