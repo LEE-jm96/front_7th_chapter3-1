@@ -36,7 +36,7 @@ function SelectGroup({ children, ...props }: React.ComponentProps<"optgroup">) {
 }
 
 // Not applicable for native select, but kept for compatibility
-function SelectValue({ children, ...props }: React.PropsWithChildren) {
+function SelectValue({ children }: React.PropsWithChildren) {
   return <>{children}</>
 }
 
@@ -46,7 +46,7 @@ function SelectTrigger({
   size = "default",
   children,
   ...props 
-}: React.ComponentProps<"select"> & SelectTriggerProps) {
+}: Omit<React.ComponentProps<"select">, "size"> & SelectTriggerProps) {
   return (
     <div
       className="group/native-select relative w-fit has-[select:disabled]:opacity-50"
@@ -76,12 +76,12 @@ function SelectTrigger({
 }
 
 // Not applicable for native select, but kept for compatibility
-function SelectContent({ children, ...props }: React.PropsWithChildren) {
+function SelectContent({ children }: React.PropsWithChildren) {
   return <>{children}</>
 }
 
 // Not applicable for native select, but kept for compatibility
-function SelectLabel({ children, ...props }: React.PropsWithChildren) {
+function SelectLabel({ children }: React.PropsWithChildren) {
   return <>{children}</>
 }
 
@@ -91,17 +91,17 @@ function SelectItem({ children, value, ...props }: React.ComponentProps<"option"
 }
 
 // Not applicable for native select, but kept for compatibility
-function SelectSeparator({ ...props }: React.HTMLAttributes<HTMLElement>) {
+function SelectSeparator() {
   return null
 }
 
 // Not applicable for native select, but kept for compatibility
-function SelectScrollUpButton({ ...props }: React.HTMLAttributes<HTMLButtonElement>) {
+function SelectScrollUpButton() {
   return null
 }
 
 // Not applicable for native select, but kept for compatibility
-function SelectScrollDownButton({ ...props }: React.HTMLAttributes<HTMLButtonElement>) {
+function SelectScrollDownButton() {
   return null
 }
 
