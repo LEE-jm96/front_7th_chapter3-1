@@ -3,7 +3,7 @@ export * from './actions/button';
 
 // Forms
 export * from './forms/input';
-export * from './forms/select';
+export * from './forms/native-select';
 export * from './forms/textarea';
 export * from './forms/form-input';
 export * from './forms/form-select';
